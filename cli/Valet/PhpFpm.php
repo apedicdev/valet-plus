@@ -368,7 +368,7 @@ class PhpFpm
         $iniPath = $this->iniPath();
         if ($this->files->exists($iniPath . 'z-performance.ini')) {
             $this->cli->passthru(
-                'sed -i "" "s/xdebug.remote_autostart=0/xdebug.remote_autostart=1/g" ' . $iniPath . 'z-performance.ini'
+                'sed -i "" "s/xdebug.start_with_request=0/xdebug.start_with_request=1/g" ' . $iniPath . 'z-performance.ini'
             );
             info('xdebug.remote_autostart is now enabled.');
             return true;

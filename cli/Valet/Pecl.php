@@ -12,9 +12,7 @@ class Pecl extends AbstractPecl
     const XDEBUG_EXTENSION = 'xdebug';
     const APCU_EXTENSION = 'apcu';
     const APCU_BC_EXTENSION = 'apcu_bc';
-    const GEOIP_EXTENSION = 'geoip';
     const MEMCACHE_EXTENSION = 'memcached';
-    const YAML_EXTENSION = 'yaml';
 
     // Extension aliases.
     const APCU_BC_ALIAS = 'apc';
@@ -61,16 +59,6 @@ class Pecl extends AbstractPecl
             '5.6' => '4.0.11',
             'extension_type' => self::NORMAL_EXTENSION_TYPE
         ],
-        self::GEOIP_EXTENSION => [
-            '8.0' => false, //todo; will probably be 1.1.2
-            '7.4' => '1.1.1',
-            '7.3' => '1.1.1',
-            '7.2' => '1.1.1',
-            '7.1' => '1.1.1',
-            '7.0' => '1.1.1',
-            'extension_type' => self::NORMAL_EXTENSION_TYPE,
-            'brew_dependency' => 'geoip'
-        ],
         self::MEMCACHE_EXTENSION => [
             '7.3' => '3.1.3',
             '7.2' => '3.1.3',
@@ -78,12 +66,6 @@ class Pecl extends AbstractPecl
             '7.0' => '3.1.3',
             'default' => false,
             'extension_type' => self::NORMAL_EXTENSION_TYPE
-        ],
-        self::YAML_EXTENSION => [
-            '5.6' => '1.3.1',
-            '7.0' => '2.0.4',
-            'extension_type' => self::NORMAL_EXTENSION_TYPE,
-            'brew_dependency' => 'libyaml'
         ]
     ];
 

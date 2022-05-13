@@ -14,7 +14,6 @@ class Binaries
 
     const N98_MAGERUN = 'magerun';
     const N98_MAGERUN_2 = 'magerun2';
-    const DRUSH_LAUNCHER = 'drush';
 
     /**
      * Supported binaries for the binary manager. Example:
@@ -41,11 +40,6 @@ class Binaries
             'shasum' => '5b5b4f7a857f7716950b6ef090c005c455d5e607f800a50b7b7aefa86d1c4e36',
             'bin_location' => '/bin/'
         ],
-        self::DRUSH_LAUNCHER => [
-            'url' => 'https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar',
-            'shasum' => 'c3f32a800a2f18470b0010cd71c49e49ef5c087f8131eecfe9b686dc1f3f3d4e',
-            'bin_location' => '/bin/'
-        ]
     ];
 
     /**

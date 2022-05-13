@@ -131,7 +131,7 @@ class Mysql
      */
     public function supportedVersions()
     {
-        return ['mysql', 'mariadb', 'mysql@5.7'];
+        return ['mysql', 'mariadb', 'mysql@5.7', 'percona-server'];
     }
 
     /**
@@ -187,12 +187,12 @@ class Mysql
         $contents = $this->files->get(__DIR__ . '/../stubs/my.cnf');
 
         // MariaDB + Mysql 8 specific my.cnf changes
-        if ($type === 'mariadb' || $type === 'mysql') {
+        if ($type === 'mariadb' || $type === 'mysql' || $type === 'percona-server') {
             $contents = str_replace('show_compatibility_56=ON', '', $contents);
         }
 
         // Mysql 8 specific my.cnf changes. Disable query cache since this feature is removed in mysql 8.
-        if ($type === 'mysql') {
+        if ($type === 'mysql' || $type === 'percona-server') {
             $contents = str_replace('query_cache_size=67108864', '', $contents);
             $contents = str_replace('query_cache_type=1', '', $contents);
             $contents = str_replace('query_cache_limit=4194304', '', $contents);

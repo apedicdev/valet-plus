@@ -7,17 +7,13 @@ use ValetDriver;
 
 class DevTools
 {
-    const WP_CLI_TOOL = 'wp-cli';
     const PV_TOOL = 'pv';
-    const GEOIP_TOOL = 'geoip';
     const ZLIB_TOOL = 'zlib';
     const JQ = 'jq';
     const LIBYAML = 'libyaml';
 
     const SUPPORTED_TOOLS = [
-        self::WP_CLI_TOOL,
         self::PV_TOOL,
-        self::GEOIP_TOOL,
         self::ZLIB_TOOL,
         self::JQ,
         self::LIBYAML

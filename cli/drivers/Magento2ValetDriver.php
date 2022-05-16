@@ -26,16 +26,16 @@ class Magento2ValetDriver extends ValetDriver
             $devtools->cli->quietlyAsUser('bin/magento module:enable --all');
         }
 
-        info('Setting base url...');
+        info('Setting base url...' . $url);
         $devtools->cli->quietlyAsUser('n98-magerun2 config:store:set web/unsecure/base_url ' . $url . '/');
         $devtools->cli->quietlyAsUser('n98-magerun2 config:store:set web/secure/base_url ' . $url . '/');
 
         info('Setting elastic search hostname...');
         $devtools->cli->quietlyAsUser('n98-magerun2 config:store:set catalog/search/elasticsearch_server_hostname 127.0.0.1');
-        
+
         info('Enabling URL rewrites...');
         $devtools->cli->quietlyAsUser('n98-magerun2 config:store:set web/seo/use_rewrites 1');
-        
+
         info('Flushing cache...');
         $devtools->cli->quietlyAsUser('n98-magerun2 cache:flush');
 
@@ -84,7 +84,7 @@ class Magento2ValetDriver extends ValetDriver
         $this->loadServerEnvironmentVariables($sitePath, $siteName);
         $isMagentoStatic = false;
         $resource = $uri;
-        
+
         if (strpos($uri, '/errors') === 0 && file_exists($sitePath.'/pub'.$uri)) {
             return $sitePath.'/pub'.$uri;
         }
@@ -144,7 +144,7 @@ class Magento2ValetDriver extends ValetDriver
         if (isset($_GET['profile'])) {
             $_SERVER['MAGE_PROFILER'] = 'html';
         }
-        
+
         if (strpos($uri, '/errors') === 0) {
             $file = $sitePath . '/pub' . $uri;
             if (file_exists($file)) {

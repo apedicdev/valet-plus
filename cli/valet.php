@@ -16,6 +16,7 @@ use Illuminate\Container\Container;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use SebastianBergmann\Version;
 use Symfony\Component\Console\Question\Question;
+use function Valet\info;
 
 /**
  * Create the application.
@@ -499,6 +500,25 @@ if (is_dir(VALET_HOME_PATH)) {
 
         info('Valet has been uninstalled.');
     })->descriptions('Uninstall the Valet services');
+
+    /**
+     * Install the sudoers.d entries so password is no longer required.
+     */
+    $app->command('trust [--off]', function ($off) {
+        if ($off) {
+            Brew::removeSudoersEntry();
+            Valet::removeSudoersEntry();
+
+            return info('Sudoers entries have been removed for Brew and Valet.');
+        }
+
+        Brew::createSudoersEntry();
+        Valet::createSudoersEntry();
+
+        info('Sudoers entries have been added for Brew and Valet.');
+    })->descriptions('Add sudoers files for Brew and Valet to make Valet commands run without passwords', [
+        '--off' => 'Remove the sudoers files so normal sudo password prompts are required.',
+    ]);
 
     /**
      * Determine if this is the latest release of Valet.

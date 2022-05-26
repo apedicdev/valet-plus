@@ -350,6 +350,7 @@ if (is_dir(VALET_HOME_PATH)) {
                     break;
                 case 'mysql':
                 case 'mariadb':
+                case 'percona-server':
                     Mysql::restart();
                     break;
                 case 'php':
@@ -373,6 +374,9 @@ if (is_dir(VALET_HOME_PATH)) {
                     break;
                 case 'varnish':
                     Varnish::restart();
+                    break;
+                case 'dns':
+                    DnsMasq::restart();
                     break;
             }
         }

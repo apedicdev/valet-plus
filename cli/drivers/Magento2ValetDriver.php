@@ -1,4 +1,5 @@
 <?php
+use function Valet\info;
 
 class Magento2ValetDriver extends ValetDriver
 {

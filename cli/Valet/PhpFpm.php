@@ -22,7 +22,7 @@ class PhpFpm
         self::PHP_V72_VERSION => self::PHP_FORMULA_NAME . self::PHP_V72_VERSION,
         self::PHP_V73_VERSION => self::PHP_FORMULA_NAME . self::PHP_V73_VERSION,
         self::PHP_V74_VERSION => self::PHP_FORMULA_NAME . self::PHP_V74_VERSION,
-        self::PHP_V80_VERSION => self::PHP_FORMULA_NAME . self::PHP_V80_VERSION
+        self::PHP_V80_VERSION => self::PHP_FORMULA_NAME . self::PHP_V80_VERSION,
     ];
 
     const EOL_PHP_VERSIONS = [
@@ -30,28 +30,33 @@ class PhpFpm
         self::PHP_V70_VERSION,
         self::PHP_V71_VERSION,
         self::PHP_V72_VERSION,
-        self::PHP_V73_VERSION
+        self::PHP_V73_VERSION,
     ];
 
     const LOCAL_PHP_FOLDER = '/etc/valet-php/';
 
     public $brew;
+
     public $cli;
+
     public $files;
+
     public $pecl;
+
     public $peclCustom;
+
     public $brewDir;
 
     const DEPRECATED_PHP_TAP = 'homebrew/php';
     const VALET_PHP_BREW_TAP = 'henkrehorst/php';
 
     /**
-     * @param Architecture $architecture
-     * @param Brew $brew
-     * @param CommandLine $cli
-     * @param Filesystem $files
-     * @param Pecl $pecl
-     * @param PeclCustom $peclCustom
+     * @param  Architecture  $architecture
+     * @param  Brew  $brew
+     * @param  CommandLine  $cli
+     * @param  Filesystem  $files
+     * @param  Pecl  $pecl
+     * @param  PeclCustom  $peclCustom
      */
     public function __construct(
         Architecture $architecture,
@@ -151,6 +156,7 @@ class PhpFpm
      * Get the formula name for a PHP version.
      *
      * @param $version
+     *
      * @return string Formula name
      */
     public function getFormulaName($version)
@@ -179,6 +185,7 @@ class PhpFpm
         // If the current version equals that of the current PHP version, do not switch.
         if ($version === $currentVersion) {
             info('Already on this version');
+
             return;
         }
 
@@ -207,6 +214,9 @@ class PhpFpm
             return;
         }
 
+        $this->cli->passthru('echo \'export PATH="/usr/local/opt/valet-php@'.$version.'/bin:$PATH"\' >> ~/.zshrc');
+        $this->cli->passthru('echo \'export PATH="/usr/local/opt/valet-php@'.$version.'/sbin:$PATH"\' >> ~/.zshrc');
+
         $this->stop();
         $this->install();
         info("Valet is now using " . self::SUPPORTED_PHP_FORMULAE[$version]);
@@ -217,6 +227,7 @@ class PhpFpm
      *
      * @param $version
      * @param $currentVersion
+     *
      * @return bool
      */
     private function linkPhp($version, $currentVersion = null)
@@ -260,15 +271,17 @@ class PhpFpm
      * Unlink a PHP version, removing the binary symlink.
      *
      * @param $version
+     *
      * @return bool
      */
     private function unlinkPhp($version)
     {
         $isUnlinked = true;
         info("[php@$version] Unlinking");
-        output($this->cli->runAsUser('brew unlink ' . self::SUPPORTED_PHP_FORMULAE[$version], function () use (&$isUnlinked) {
-            $isUnlinked = false;
-        }));
+        output($this->cli->runAsUser('brew unlink ' . self::SUPPORTED_PHP_FORMULAE[$version],
+            function () use (&$isUnlinked) {
+                $isUnlinked = false;
+            }));
         if ($isUnlinked === false) {
             warning(
                 "Could not unlink PHP version!" . PHP_EOL .
@@ -284,6 +297,7 @@ class PhpFpm
      * @deprecated Deprecated in favor of Pecl#installExtension();
      *
      * @param $extension
+     *
      * @return bool
      */
     public function enableExtension($extension)
@@ -298,6 +312,7 @@ class PhpFpm
 
         if ($this->files->exists($iniPath . 'ext-' . $extension . '.ini')) {
             info($extension . ' was already enabled.');
+
             return false;
         }
 
@@ -309,6 +324,7 @@ class PhpFpm
         }
 
         info('Enabled ' . $extension);
+
         return true;
     }
 
@@ -316,6 +332,7 @@ class PhpFpm
      * @deprecated Deprecated in favor of Pecl#uninstallExtesnion();
      *
      * @param $extension
+     *
      * @return bool
      */
     public function disableExtension($extension)
@@ -323,6 +340,7 @@ class PhpFpm
         $iniPath = $this->iniPath();
         if ($this->files->exists($iniPath . 'ext-' . $extension . '.ini.disabled')) {
             info($extension . ' was already disabled.');
+
             return false;
         }
 
@@ -334,6 +352,7 @@ class PhpFpm
         }
 
         info('Disabled ' . $extension);
+
         return true;
     }
 
@@ -341,11 +360,11 @@ class PhpFpm
      * @deprecated Deprecated in favor of Pecl#installed();
      *
      * @param $extension
+     *
      * @return bool
      */
     public function isExtensionEnabled($extension)
     {
-
         $currentPhpVersion = $this->brew->linkedPhp();
 
         if (!$this->brew->installed($currentPhpVersion . '-' . $extension)) {
@@ -371,15 +390,18 @@ class PhpFpm
                 'sed -i "" "s/xdebug.start_with_request=0/xdebug.start_with_request=1/g" ' . $iniPath . 'z-performance.ini'
             );
             info('xdebug.remote_autostart is now enabled.');
+
             return true;
         }
         warning('Cannot find z-performance.ini, please re-install Valet+');
+
         return false;
     }
 
     /**
      * Xdebug 3 has different configuration fields in z-performance.ini than Xdebug 2.0.
      * This function will enable/disable the version specific settings in z-performance.ini.
+     *
      * @see https://xdebug.org/docs/upgrade_guide#New-Concepts
      * @return void
      */
@@ -397,7 +419,7 @@ class PhpFpm
         if (!$this->files->exists($zPerformancePath)) {
             warning('Cannot find z-performance.ini, please re-install Valet+');
         }
-        info('Patching z-performance.ini so it will work with Xdebug '. $version);
+        info('Patching z-performance.ini so it will work with Xdebug ' . $version);
         $content = $this->files->get($zPerformancePath);
 
         if ($majorVersion === 3) {
@@ -458,9 +480,11 @@ class PhpFpm
                 'sed -i "" "s/xdebug.remote_autostart=1/xdebug.remote_autostart=0/g" ' . $iniPath . 'z-performance.ini'
             );
             info('xdebug.remote_autostart is now disabled.');
+
             return true;
         }
         warning('Cannot find z-performance.ini, please re-install Valet+');
+
         return false;
     }
 
@@ -589,18 +613,18 @@ class PhpFpm
             $this->brew->ensureInstalled(self::SUPPORTED_PHP_FORMULAE[self::PHP_V74_VERSION], ['--build-from-source']);
         }
 
-        // Check the current linked PHP version. If the current version is not the default version.
+        /*// Check the current linked PHP version. If the current version is not the default version.
         // Then relink the default version.
         if ($this->linkedPhp() !== self::PHP_V74_VERSION) {
             $this->unlinkPhp(self::PHP_V74_VERSION);
             $this->linkPhp(self::PHP_V74_VERSION);
-        }
+        }*/
 
-        // Untap the deprecated brew tap.
+       /* // Untap the deprecated brew tap.
         if ($this->brew->hasTap(self::DEPRECATED_PHP_TAP)) {
             info('[brew] untapping formulae ' . self::DEPRECATED_PHP_TAP);
             $this->brew->unTap(self::DEPRECATED_PHP_TAP);
-        }
+        }*/
 
         warning(
             "Please check your linked php version, you might need to restart your terminal!" .
